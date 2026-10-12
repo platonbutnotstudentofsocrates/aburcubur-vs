@@ -166,3 +166,32 @@ export async function nominate(round: number, voter: string, product: string, ip
   );
   return "ok" as const;
 }
+
+export type PanelStats = {
+  sources: { label: string; n: number }[];
+  hours: { hour: string; n: number }[];
+  citySources: { label: string; n: number }[];
+  nominations: number;
+};
+
+/** Yalnızca panelde gösterilen özet: kanal kanal ve saat saat oy (Türkiye saati, UTC+3). */
+export async function getPanelStats(round: number): Promise<PanelStats> {
+  const query = await db();
+  const [sources, hours, citySources, [noms]] = await Promise.all([
+    query<{ label: string; n: number }>(
+      `select coalesce(source, '') as label, count(*)::int as n from votes where matchup = $1 group by 1 order by 2 desc`,
+      [round],
+    ),
+    query<{ hour: string; n: number }>(
+      `select to_char(date_trunc('hour', created_at + interval '3 hours'), 'YYYY-MM-DD HH24') as hour, count(*)::int as n
+         from votes where matchup = $1 group by 1 order by 1`,
+      [round],
+    ),
+    query<{ label: string; n: number }>(
+      `select coalesce(city_source, '') as label, count(*)::int as n from votes where matchup = $1 group by 1 order by 2 desc`,
+      [round],
+    ),
+    query<{ n: number }>(`select count(*)::int as n from nominations where matchup = $1`, [round]),
+  ]);
+  return { sources, hours, citySources, nominations: noms.n };
+}
