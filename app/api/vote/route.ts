@@ -12,7 +12,8 @@ export async function POST(request: Request) {
   if (isClosed(current)) return Response.json({ error: "Oylama kapandı." }, { status: 403 });
 
   const voter = await ensureVoter();
-  const outcome = await castVote(current.round, voter, choice, await guessCity(), await getIpHash());
+  const source = typeof body.source === "string" && /^[a-z0-9.-]{1,40}$/.test(body.source) ? body.source : null;
+  const outcome = await castVote(current.round, voter, choice, await guessCity(), await getIpHash(), source);
   if (outcome === "limited")
     return Response.json({ error: "Bu ağdan çok fazla oy geldi. Biraz sonra tekrar dene." }, { status: 429 });
 

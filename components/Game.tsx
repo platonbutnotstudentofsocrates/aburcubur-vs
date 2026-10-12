@@ -19,6 +19,26 @@ async function post<T>(url: string, body: unknown): Promise<T> {
   return data;
 }
 
+const SOURCE_KEY = "kaynak";
+
+// Ziyaretçinin hangi kanaldan geldiği: linkteki ?k= etiketi, yoksa gelinen sitenin adı.
+function rememberSource() {
+  try {
+    const tag = new URLSearchParams(window.location.search).get("k")?.toLowerCase();
+    const referrer = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, "") : "";
+    const source = tag || (referrer && referrer !== window.location.hostname ? referrer : "");
+    if (source && (tag || !localStorage.getItem(SOURCE_KEY))) localStorage.setItem(SOURCE_KEY, source);
+  } catch {}
+}
+
+function readSource() {
+  try {
+    return localStorage.getItem(SOURCE_KEY) ?? "direkt";
+  } catch {
+    return "direkt";
+  }
+}
+
 function useCountdown(endsAt: string) {
   const [left, setLeft] = useState<number | null>(null);
   useEffect(() => {
@@ -98,6 +118,8 @@ export function Game(props: {
   const total = shown ? shown.a + shown.b : 0;
   const winner: Choice | null = closed && shown && shown.a !== shown.b ? (shown.a > shown.b ? "a" : "b") : null;
 
+  useEffect(rememberSource, []);
+
   // Süre dolunca sunucudan sonucu ya da yeni raundu al.
   useEffect(() => {
     if (closed) router.refresh();
@@ -107,7 +129,7 @@ export function Game(props: {
     setBusy(true);
     setError("");
     try {
-      const data = await post<{ vote: Choice; city: string | null; results: Results }>("/api/vote", { choice, round: matchup.round });
+      const data = await post<{ vote: Choice; city: string | null; results: Results }>("/api/vote", { choice, round: matchup.round, source: readSource() });
       setVote(data.vote);
       setCity(data.city);
       setResults(data.results);

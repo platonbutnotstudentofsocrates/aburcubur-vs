@@ -118,12 +118,12 @@ async function ipLimited(table: "votes" | "nominations", round: number, ipHash: 
   return n >= IP_VOTES_PER_HOUR;
 }
 
-export async function castVote(round: number, voter: string, choice: Choice, city: string | null, ipHash: string) {
+export async function castVote(round: number, voter: string, choice: Choice, city: string | null, ipHash: string, source: string | null) {
   if (await ipLimited("votes", round, ipHash)) return "limited" as const;
   const query = await db();
   await query(
-    `insert into votes (matchup, voter, choice, city, city_source, ip_hash) values ($1, $2, $3, $4, $5, $6) on conflict do nothing`,
-    [round, voter, choice, city, city ? "ip" : null, ipHash],
+    `insert into votes (matchup, voter, choice, city, city_source, ip_hash, source) values ($1, $2, $3, $4, $5, $6, $7) on conflict do nothing`,
+    [round, voter, choice, city, city ? "ip" : null, ipHash, source],
   );
   return "ok" as const;
 }

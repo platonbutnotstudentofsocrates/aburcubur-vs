@@ -20,6 +20,8 @@ const SCHEMA = [
   `create index if not exists votes_ip on votes (matchup, ip_hash, created_at)`,
   // İlin nereden geldiği: 'ip' (tahmin) ya da 'user' (kişi kendi seçti).
   `alter table votes add column if not exists city_source text`,
+  // Oyun hangi kanaldan geldiği: linkteki ?k= etiketi ya da gelinen sitenin adı.
+  `alter table votes add column if not exists source text`,
   // Sonraki kapışma için adaylar: kişi başı tek ürün (lib/catalog.ts kimliği).
   `create table if not exists nominations (
      matchup int not null,

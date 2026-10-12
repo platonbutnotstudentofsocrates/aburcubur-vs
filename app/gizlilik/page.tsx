@@ -16,6 +16,7 @@ export default function Gizlilik() {
           <li><b>Oyun ve adayın.</b> Hangi ürüne oy verdiğin ve sonraki raunt için hangi ürünü seçtiğin.</li>
           <li><b>Rastgele bir tarayıcı kimliği.</b> Aynı tarayıcıdan ikinci kez oy verilmesin diye bir çerezde saklanır. Seni tanımlayan bir bilgi içermez.</li>
           <li><b>İl.</b> IP adresinden yalnızca il düzeyinde tahmin edilir, istersen kendin düzeltebilirsin. Haritada toplu sonuç göstermek için oyunla birlikte saklanır. İlçe, adres ya da konum tutulmaz.</li>
+          <li><b>Nereden geldiğin.</b> Siteye hangi bağlantıdan ya da hangi siteden geldiğin (örneğin Instagram) oyunla birlikte saklanır. Hangi kanalın işe yaradığını görmek içindir.</li>
           <li><b>IP adresinin özeti.</b> IP adresinin kendisi kaydedilmez. Tek bir ağdan toplu oy atılmasını önlemek için geri döndürülemeyen bir özeti tutulur ve raunt bitince silinir.</li>
         </ul>
 
