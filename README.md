@@ -15,7 +15,7 @@ npm run dev
 
 1. Projeyi Vercel'e aktar.
 2. Storage sekmesinden bir Postgres veritabanı (Neon) ekle; `DATABASE_URL` kendiliğinden tanımlanır. Tablolar ilk istekte oluşturulur.
-3. `IP_SALT` ortam değişkenine rastgele bir metin yaz (IP adresleri bununla karıştırılarak saklanır).
+3. İsteğe bağlı: `IP_SALT` ortam değişkenine rastgele bir metin yaz. Tanımlı değilse IP özetleri için veritabanı adresi tuz olarak kullanılır.
 
 İl tahmini Vercel'in `x-vercel-ip-country-region` başlığından gelir; yerelde boş kalır.
 

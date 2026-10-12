@@ -25,7 +25,9 @@ export async function ensureVoter() {
 export async function getIpHash() {
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0].trim() || h.get("x-real-ip") || "local";
-  return createHash("sha256").update(`${process.env.IP_SALT ?? "aburcubur"}:${ip}`).digest("hex").slice(0, 32);
+  // Tuz gizli olmalı: ayrıca tanımlanmadıysa zaten gizli olan veritabanı adresi kullanılır.
+  const salt = process.env.IP_SALT ?? process.env.DATABASE_URL ?? process.env.POSTGRES_URL ?? "aburcubur";
+  return createHash("sha256").update(`${salt}:${ip}`).digest("hex").slice(0, 32);
 }
 
 /** Vercel'in IP'den tahmin ettiği il (plaka kodu). Bulunamazsa null. */
