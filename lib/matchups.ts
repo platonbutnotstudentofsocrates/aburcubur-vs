@@ -10,9 +10,12 @@ export type Matchup = {
 };
 
 // Veritabanı boşken açılan ilk kapışma. Sonrakiler adaylardan kendiliğinden açılır.
-export const FIRST: Matchup = { round: 1, a: "pingui", b: "sut-dilimi", endsAt: "2026-10-19T18:00:00Z" };
+export const FIRST = { round: 1, a: "pingui", b: "sut-dilimi" };
 
-/** Kendiliğinden açılan her raunt bu kadar gün sürer. */
+/** İlk raunt, site ilk açıldığı andan itibaren bu kadar gün sürer (tanıtıma zaman kalsın diye uzun). */
+export const FIRST_ROUND_DAYS = 10;
+
+/** Kendiliğinden açılan sonraki her raunt bu kadar gün sürer. */
 export const ROUND_DAYS = 7;
 
 /** A tarafının yüzdesi (tam sayı). Oy yoksa 50. */

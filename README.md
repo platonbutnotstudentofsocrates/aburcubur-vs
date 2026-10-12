@@ -21,7 +21,7 @@ npm run dev
 
 ## Raunt akışı
 
-İlk kapışma `lib/matchups.ts` içindeki `FIRST` ile açılır. Herkes sonraki raunt için katalogdan tek bir ürün seçer; süre dolunca aynı kategoriden en çok seçilen ikili (ilk ikisinin toplamı en yüksek olan kategori) kendiliğinden yeni kapışma olur ve `ROUND_DAYS` gün sürer. Kapışmış ürünler yeniden aday olamaz. Biten rauntlar "Kazananlar" listesinde kalır.
+İlk kapışma `lib/matchups.ts` içindeki `FIRST` ile açılır ve site ilk açıldığı andan itibaren `FIRST_ROUND_DAYS` gün sürer. Herkes sonraki raunt için katalogdan tek bir ürün seçer; süre dolunca aynı kategoriden en çok seçilen ikili (ilk ikisinin toplamı en yüksek olan kategori) kendiliğinden yeni kapışma olur ve `ROUND_DAYS` gün sürer. Kapışmış ürünler yeniden aday olamaz. Biten rauntlar "Kazananlar" listesinde kalır.
 
 ## Katalog
 

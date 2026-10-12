@@ -1,6 +1,6 @@
 import { db } from "./db";
 import { findProduct, pickNextPair, type Nominee } from "./catalog";
-import { FIRST, isClosed, ROUND_DAYS, type Choice, type Matchup } from "./matchups";
+import { FIRST, FIRST_ROUND_DAYS, isClosed, ROUND_DAYS, type Choice, type Matchup } from "./matchups";
 
 export type Tally = { a: number; b: number };
 export type Results = Tally & { cities: Record<string, Tally> };
@@ -23,9 +23,10 @@ export async function getCurrent(): Promise<Matchup> {
   const query = await db();
   let current = await latestMatchup();
   if (!current) {
-    await query(`insert into matchups (round, a, b, ends_at) values ($1, $2, $3, $4::timestamptz) on conflict do nothing`, [
-      FIRST.round, FIRST.a, FIRST.b, FIRST.endsAt,
-    ]);
+    await query(
+      `insert into matchups (round, a, b, ends_at) values ($1, $2, $3, now() + make_interval(days => $4)) on conflict do nothing`,
+      [FIRST.round, FIRST.a, FIRST.b, FIRST_ROUND_DAYS],
+    );
     current = (await latestMatchup())!;
   }
   if (isClosed(current)) {
