@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Abur Cubur VS
 
-## Getting Started
+İki atıştırmalığı kapıştıran tek sayfalık anket: tek tıkla oy, il il sonuç haritası, paylaşım kartı ve "sonraki VS" önerileri.
 
-First, run the development server:
+## Yerelde çalıştırma
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`DATABASE_URL` tanımlı değilse oylar `.data/` altındaki gömülü Postgres'e (PGlite) yazılır; hesap açmadan denenebilir.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Yayına alma (Vercel)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Projeyi Vercel'e aktar.
+2. Storage sekmesinden bir Postgres veritabanı (Neon) ekle; `DATABASE_URL` kendiliğinden tanımlanır. Tablolar ilk istekte oluşturulur.
+3. `IP_SALT` ortam değişkenine rastgele bir metin yaz (IP adresleri bununla karıştırılarak saklanır).
 
-## Learn More
+İl tahmini Vercel'in `x-vercel-ip-country-region` başlığından gelir; yerelde boş kalır.
 
-To learn more about Next.js, take a look at the following resources:
+## Raunt akışı
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+İlk kapışma `lib/matchups.ts` içindeki `FIRST` ile açılır. Herkes sonraki raunt için katalogdan tek bir ürün seçer; süre dolunca aynı kategoriden en çok seçilen ikili (ilk ikisinin toplamı en yüksek olan kategori) kendiliğinden yeni kapışma olur ve `ROUND_DAYS` gün sürer. Kapışmış ürünler yeniden aday olamaz. Biten rauntlar "Kazananlar" listesinde kalır.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Katalog
 
-## Deploy on Vercel
+Ürünler ve kategoriler `lib/catalog.ts` içinde. Yeni ürün tek satırdır: kimlik, ad, kategori, şekil ve üç renk. Çizim bu şekil ve renklerden üretilir (`lib/art.ts`). Tüm ürünler `/katalog` sayfasında görülebilir.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Harita
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`data/provinces.json` ve `data/pixel-grid.json`, `node scripts/build-map.mjs` ile `data/src/tr-provinces.geojson` dosyasından üretilir. Kaynak: geoBoundaries TUR ADM1, © OpenStreetMap katkıcıları (ODbL).

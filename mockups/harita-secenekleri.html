@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abur Cubur VS — harita seçenekleri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Archivo+Black&family=Space+Grotesk:wght@500;700&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e9e7e2; font-family: system-ui, sans-serif; padding: 32px 16px 48px; color: #222; }
+  .wrap { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+  .col { width: 380px; max-width: 100%; }
+  .label { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+  .phone { border-radius: 28px; overflow: hidden; padding: 20px 16px 24px; }
+  .score { display: flex; gap: 8px; margin-top: 12px; }
+  .score div { flex: 1; padding: 10px 12px; }
+  .score b { display: block; font-size: 24px; line-height: 1.1; }
+  .score span { font-size: 13px; }
+  .map { margin-top: 16px; }
+  .map svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .map [data-i] { cursor: pointer; }
+  .tip { margin-top: 10px; padding: 8px 12px; font-size: 14px; text-align: center; min-height: 36px; }
+  .legend { display: flex; justify-content: center; gap: 14px; margin-top: 10px; font-size: 12px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; margin-right: 5px; vertical-align: -1px; }
+  .rows { margin-top: 18px; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; margin-top: 8px; font-size: 14px; }
+
+  /* A — Piksel arcade */
+  .tA { --p1: #4cc9f0; --p1l: #2a6f8f; --p2: #ff5d73; --p2l: #96394a;
+        background: #14142b; color: #f4f0e0; font-family: 'Pixelify Sans', monospace; border-radius: 0; border: 4px solid #000; }
+  .tA h3 { font-size: 20px; color: #ffd23f; text-shadow: 3px 3px 0 #d7263d; }
+  .tA .score div { border: 4px solid #f4f0e0; box-shadow: 4px 4px 0 #000; color: #14142b; }
+  .tA .tip { background: #1f1f3d; border: 2px solid #4a4a7a; }
+  .tA .legend { color: #a9a9c9; }
+  .tA h4 { font-size: 16px; color: #ffd23f; }
+  .tA .row { background: #1f1f3d; border: 2px solid #4a4a7a; }
+
+  /* B — Sticker pop */
+  .tB { --p1: #5bbcff; --p1l: #c3e6ff; --p2: #ff7d95; --p2l: #ffd0d8;
+        background: #fff6e0; color: #111; font-family: 'Space Grotesk', sans-serif; border: 3px solid #111; }
+  .tB h3 { font-family: 'Archivo Black', sans-serif; font-size: 20px; }
+  .tB .score div { border: 3px solid #111; border-radius: 16px; box-shadow: 4px 4px 0 #111; }
+  .tB .score b { font-family: 'Archivo Black', sans-serif; }
+  .tB .map .shadow path { fill: #111; stroke: #111; stroke-width: 0.12; }
+  .tB .map .land path { stroke: #111; stroke-width: 0.05; stroke-linejoin: round; }
+  .tB .tip { background: #ffe14d; border: 2px solid #111; border-radius: 99px; font-weight: 700; }
+  .tB h4 { font-family: 'Archivo Black', sans-serif; font-size: 16px; }
+  .tB .row { background: #fff; border: 2px solid #111; border-radius: 14px; font-weight: 700; box-shadow: 3px 3px 0 #111; }
+
+  /* C — Yumuşak şeker */
+  .tC { --p1: #4aa8ff; --p1l: #b9dcff; --p2: #ff6f91; --p2l: #ffc6d3;
+        background: #fdf1f5; color: #3b2a4a; font-family: 'Fredoka', sans-serif; }
+  .tC h3 { font-size: 21px; font-weight: 700; color: #7b4bd6; }
+  .tC .score div { border-radius: 20px; color: #fff; }
+  .tC .map { background: #fff; border-radius: 24px; padding: 14px 10px; }
+  .tC .map .land path { stroke: #fff; stroke-width: 0.07; stroke-linejoin: round; }
+  .tC .tip { background: #efe6ff; color: #7b4bd6; border-radius: 99px; font-weight: 600; }
+  .tC .legend { color: #8a7799; }
+  .tC h4 { font-size: 17px; font-weight: 600; }
+  .tC .row { background: #fff; border-radius: 16px; font-weight: 600; }
+
+  .s1 { background: var(--p1); } .s2 { background: var(--p2); }
+  .c1 { color: var(--p1); } .c2 { color: var(--p2); }
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap"></div>
+
+<script>
+const GEO = 'https://cdn.jsdelivr.net/gh/cihadturhan/tr-geojson/geo/tr-cities-utf8.json';
+const KX = 0.777, X0 = 25.6, Y0 = 42.2, W = 15.0, H = 6.5;
+const proj = ([lon, lat]) => [(lon - X0) * KX, Y0 - lat];
+
+// örnek veri: il adına göre sabit sahte yüzde
+const fakePct = name => { let h = 7; for (const ch of name) h = (h * 31 + ch.codePointAt(0)) % 9973; return 36 + (h % 30); };
+
+const polysOf = g => g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+const inRing = (x, y, r) => {
+  let c = false;
+  for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+    const [xi, yi] = r[i], [xj, yj] = r[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+};
+
+function build(key, name, cities) {
+  const p1 = cities.filter(c => c.pct >= 50).length;
+  const fill = c => `var(--p${c.pct >= 50 ? 1 : 2}${Math.abs(c.pct - 50) < 6 ? 'l' : ''})`;
+  let map;
+  if (key === 'A') {
+    const cols = 62, cell = W / cols, rows = Math.ceil(H / cell);
+    let rects = '';
+    for (let r = 0; r < rows; r++) for (let q = 0; q < cols; q++) {
+      const x = (q + 0.5) * cell, y = (r + 0.5) * cell;
+      const i = cities.findIndex(c => x >= c.box[0] && x <= c.box[2] && y >= c.box[1] && y <= c.box[3] && c.rings.some(ring => inRing(x, y, ring)));
+      if (i >= 0) rects += `<rect data-i="${i}" x="${q * cell}" y="${r * cell}" width="${cell * 0.9}" height="${cell * 0.9}" fill="${fill(cities[i])}"/>`;
+    }
+    map = `<svg viewBox="0 0 ${W} ${rows * cell}" shape-rendering="crispEdges">${rects}</svg>`;
+  } else {
+    const paths = cities.map((c, i) => `<path data-i="${i}" d="${c.d}" fill="${fill(c)}"/>`).join('');
+    const shadow = key === 'B' ? `<g class="shadow" transform="translate(0.14 0.14)">${cities.map(c => `<path d="${c.d}"/>`).join('')}</g>` : '';
+    map = `<svg viewBox="0 0 ${W} ${H}">${shadow}<g class="land">${paths}</g></svg>`;
+  }
+  const big = ['İstanbul', 'Ankara', 'İzmir', 'Bursa'].map(n => cities.find(c => c.name === n)).filter(Boolean);
+  const side = c => c.pct >= 50 ? `<span class="c1">%${c.pct} Pingui</span>` : `<span class="c2">%${100 - c.pct} Süt Dilimi</span>`;
+  const col = document.createElement('div');
+  col.className = 'col';
+  col.innerHTML = `<div class="label">${key} — ${name}</div>
+    <div class="phone t${key}">
+      <h3>Türkiye ne diyor?</h3>
+      <div class="score"><div class="s1"><b>${p1} il</b><span>Pingui</span></div><div class="s2"><b>${cities.length - p1} il</b><span>Süt Dilimi</span></div></div>
+      <div class="map">${map}</div>
+      <div class="tip">Bir ile dokun</div>
+      <div class="legend"><span><i style="background:var(--p1)"></i>Pingui</span><span><i style="background:var(--p1l)"></i>kıl payı</span><span><i style="background:var(--p2l)"></i>kıl payı</span><span><i style="background:var(--p2)"></i>Süt Dilimi</span></div>
+      <div class="rows"><h4>Büyükşehirler</h4>${big.map(c => `<div class="row"><span>${c.name}</span>${side(c)}</div>`).join('')}</div>
+    </div>`;
+  const tip = col.querySelector('.tip');
+  col.querySelector('.map').addEventListener('pointerover', e => {
+    const i = e.target.dataset.i;
+    if (i !== undefined) tip.innerHTML = `${cities[i].name} — ${side(cities[i])}`;
+  });
+  document.getElementById('wrap').appendChild(col);
+}
+
+fetch(GEO).then(r => r.json()).then(geo => {
+  const cities = geo.features.map(f => {
+    const rings = polysOf(f.geometry).map(p => p[0].map(proj));
+    const xs = rings.flat().map(p => p[0]), ys = rings.flat().map(p => p[1]);
+    return {
+      name: f.properties.name, pct: fakePct(f.properties.name), rings,
+      box: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)],
+      d: rings.map(r => 'M' + r.map(p => p[0].toFixed(3) + ' ' + p[1].toFixed(3)).join('L') + 'Z').join(''),
+    };
+  });
+  build('A', 'Piksel arcade', cities);
+  build('B', 'Sticker pop', cities);
+  build('C', 'Yumuşak şeker', cities);
+}).catch(() => { document.getElementById('wrap').textContent = 'Harita verisi yüklenemedi (internet bağlantısı gerekli).'; });
+</script>
+</body>
+</html>
