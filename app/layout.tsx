@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Pixelify_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
@@ -24,7 +25,10 @@ export const viewport: Viewport = { themeColor: "#fff6e0" };
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="tr" className={`${display.variable} ${body.variable} ${pixel.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
