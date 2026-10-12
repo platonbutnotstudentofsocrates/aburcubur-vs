@@ -11,9 +11,7 @@ const title = "Abur Cubur VS";
 const description = "Hangisi kazanır? Tek tıkla oy ver, Türkiye ne diyor gör.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000",
-  ),
+  metadataBase: new URL(process.env.VERCEL_ENV === "production" ? "https://aburcubur.online" : "http://localhost:3000"),
   title,
   description,
   openGraph: { title, description, locale: "tr_TR", type: "website" },
