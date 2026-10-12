@@ -28,7 +28,7 @@ export default async function Veri() {
         </p>
       </div>
 
-      <Donate />
+      <Donate open />
 
       {rounds.length > 0 ? (
         <section className="past">

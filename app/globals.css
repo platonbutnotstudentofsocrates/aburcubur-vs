@@ -156,5 +156,7 @@ footer a { color: inherit; }
 
 .donate { margin-top: 14px; padding: 12px; background: var(--a-soft); border: 2px solid var(--ink); border-radius: 16px; font-size: 13px; line-height: 1.5; }
 .donate b { font-size: 14px; }
-.donate .downloads { margin-top: 8px; align-items: center; }
-.donate .downloads span { background: none; border: 0; padding: 0; min-width: 76px; }
+.donate summary { margin-top: 8px; font-weight: 700; cursor: pointer; }
+.donate .group { margin-top: 10px; }
+.donate .group span { font-size: 12px; font-weight: 700; }
+.donate .downloads { margin-top: 4px; }
