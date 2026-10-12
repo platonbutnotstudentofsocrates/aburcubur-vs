@@ -160,3 +160,7 @@ footer a { color: inherit; }
 .donate .group { margin-top: 10px; }
 .donate .group span { font-size: 12px; font-weight: 700; }
 .donate .downloads { margin-top: 4px; }
+
+.datalink { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 28px; padding: 10px 14px; border: 2px dashed var(--ink); border-radius: 14px; color: var(--ink); text-decoration: none; font-size: 13px; }
+.datalink b { white-space: nowrap; background: var(--pop); border: 2px solid var(--ink); border-radius: 99px; padding: 3px 10px; }
+.datalink + footer { margin-top: 16px; }

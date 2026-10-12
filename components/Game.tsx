@@ -272,6 +272,11 @@ export function Game(props: {
         </section>
       )}
 
+      <Link className="datalink" href="/veri">
+        <span>Tüm sonuç verileri herkese açık</span>
+        <b>Veriyi gör ›</b>
+      </Link>
+
       <footer>
         Eğlence amaçlı bağımsız bir ankettir; adı geçen markalarla bir bağlantısı yoktur. Harita verisi © OpenStreetMap katkıcıları.{" "}
         <Link href="/veri">Veri</Link> · <Link href="/gizlilik">Gizlilik</Link>
