@@ -7,8 +7,10 @@ import { getCurrent, getResults, type Tally } from "@/lib/store";
 
 const CELL = 18;
 
-function cellColor(t: Tally | undefined) {
-  if (!t || t.a === t.b) return colors.empty;
+function cellColor(t: Tally | undefined, checker: boolean) {
+  if (!t || t.a + t.b === 0) return colors.empty;
+  // Berabere iller iki rengin damalı karışımıyla gösterilir.
+  if (t.a === t.b) return checker ? colors.a : colors.b;
   const pa = percent(t);
   const close = Math.abs(pa - 50) < 6;
   return pa >= 50 ? (close ? colors.aSoft : colors.a) : close ? colors.bSoft : colors.b;
@@ -42,7 +44,7 @@ export async function GET(request: Request) {
 
         <div style={{ display: "flex", position: "relative", width: grid.cols * CELL, height: grid.rows * CELL }}>
           {grid.cells.map(([q, r, code]) => (
-            <div key={`${q}-${r}`} style={{ position: "absolute", left: (q as number) * CELL, top: (r as number) * CELL, width: CELL - 2, height: CELL - 2, background: cellColor(results.cities[code as string]) }} />
+            <div key={`${q}-${r}`} style={{ position: "absolute", left: (q as number) * CELL, top: (r as number) * CELL, width: CELL - 2, height: CELL - 2, background: cellColor(results.cities[code as string], ((q as number) + (r as number)) % 2 === 0) }} />
           ))}
         </div>
 

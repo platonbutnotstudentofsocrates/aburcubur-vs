@@ -9,7 +9,8 @@ const CLOSE_MARGIN = 6;
 export const provincesByName = [...map.provinces].sort((x, y) => x.name.localeCompare(y.name, "tr"));
 
 function fill(t: Tally | undefined) {
-  if (!t || t.a === t.b) return "var(--empty)";
+  if (!t || t.a + t.b === 0) return "var(--empty)";
+  if (t.a === t.b) return "url(#tie)";
   const pa = percent(t);
   const side = pa >= 50 ? "a" : "b";
   return `var(--${side}${Math.abs(pa - 50) < CLOSE_MARGIN ? "-soft" : ""})`;
@@ -60,6 +61,13 @@ export function TurkeyMap({ results, names }: { results: Results; names: { a: st
           if (code) setActive(code);
         }}
       >
+        <defs>
+          {/* Berabere iller: iki tarafın rengiyle çizgili */}
+          <pattern id="tie" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect width="8" height="16" fill="var(--a)" />
+            <rect x="8" width="8" height="16" fill="var(--b)" />
+          </pattern>
+        </defs>
         <g className="map-shadow" transform="translate(9 9)">
           {map.provinces.map((p) => (
             <path key={p.code} d={p.d} />
@@ -85,6 +93,8 @@ export function TurkeyMap({ results, names }: { results: Results; names: { a: st
         <span><i style={{ background: "var(--a)" }} />{names.a}</span>
         <span><i style={{ background: "var(--a-soft)" }} /><i style={{ background: "var(--b-soft)" }} />kıl payı</span>
         <span><i style={{ background: "var(--b)" }} />{names.b}</span>
+        <span><i style={{ background: "linear-gradient(135deg, var(--a) 50%, var(--b) 50%)" }} />berabere</span>
+        <span><i style={{ background: "var(--empty)" }} />oy yok</span>
       </div>
     </section>
   );
