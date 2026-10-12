@@ -141,10 +141,10 @@ export function Game(props: {
     }
   }
 
-  async function nominate() {
-    if (!form.product) return setForm({ ...form, error: "Listeden bir ürün seç." });
+  async function nominate(product = form.product) {
+    if (!product) return setForm({ ...form, error: "Listeden bir ürün seç." });
     try {
-      const data = await post<{ nomination: string; nominees: Nominee[] }>("/api/nominate", { product: form.product, round: matchup.round });
+      const data = await post<{ nomination: string; nominees: Nominee[] }>("/api/nominate", { product, round: matchup.round });
       setNomination(data.nomination);
       setNominees(data.nominees);
       setForm({ product: "", error: "" });
@@ -221,7 +221,7 @@ export function Game(props: {
 
       <section className="next">
         <h2>{"Sonraki VS'te kim olsun?"}</h2>
-        <p className="hint">Listeden bir atıştırmalık seç. Raunt bitince aynı kategoriden en çok seçilen ikili kapışır.</p>
+        <p className="hint">Listeden bir atıştırmalık seç ya da aşağıdaki öndekilerden birine dokun. Raunt bitince aynı kategoriden en çok seçilen ikili kapışır.</p>
         <form
           className="nominate"
           onSubmit={(e) => {
@@ -254,11 +254,24 @@ export function Game(props: {
             </div>
           </div>
         )}
-        {nominees.slice(0, 6).map((n, i) => (
-          <div className="row" key={n.id}>
-            <span>{i + 1}. {productName(n.id)}</span>
-            <small>{categories[findProduct(n.id)!.category]} · {number.format(n.count)} kişi</small>
-          </div>
+        {nominees.length > 0 && <h3>En çok seçilenler</h3>}
+        {nominees.slice(0, 5).map((n, i) => (
+          <button
+            className={nomination === n.id ? "row pick chosen" : "row pick"}
+            key={n.id}
+            onClick={() => nominate(n.id)}
+            disabled={nomination === n.id}
+            aria-label={`${productName(n.id)} adayını seç`}
+          >
+            <span className="who">
+              <Snack product={n.id} />
+              <span>
+                {i + 1}. {productName(n.id)}
+                <small>{categories[findProduct(n.id)!.category]} · {number.format(n.count)} kişi</small>
+              </span>
+            </span>
+            <em>{nomination === n.id ? "Senin adayın" : "Bunu seç"}</em>
+          </button>
         ))}
       </section>
 

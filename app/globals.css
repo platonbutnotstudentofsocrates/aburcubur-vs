@@ -164,3 +164,13 @@ footer a { color: inherit; }
 .datalink { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 28px; padding: 10px 14px; border: 2px dashed var(--ink); border-radius: 14px; color: var(--ink); text-decoration: none; font-size: 13px; }
 .datalink b { white-space: nowrap; background: var(--pop); border: 2px solid var(--ink); border-radius: 99px; padding: 3px 10px; }
 .datalink + footer { margin-top: 16px; }
+
+.next h3 { margin-top: 18px; font-family: var(--font-display), sans-serif; font-weight: 400; font-size: 15px; }
+.row.pick { width: 100%; text-align: left; box-shadow: 3px 3px 0 var(--ink); }
+.row.pick:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.row.pick .who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.row.pick svg { width: 44px; flex: none; }
+.row.pick small { display: block; font-weight: 500; color: #666; white-space: normal; }
+.row.pick em { font-style: normal; font-size: 12px; white-space: nowrap; background: var(--pop); border: 2px solid var(--ink); border-radius: 99px; padding: 4px 10px; }
+.row.pick.chosen { background: var(--pop); }
+.row.pick.chosen em { background: var(--ink); color: var(--pop); }
