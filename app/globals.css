@@ -151,5 +151,9 @@ footer a { color: inherit; }
 @media print {
   body { background: #fff; padding: 0; }
   .card { border: 0; box-shadow: none; max-width: none; }
-  .downloads, .back, .city, .tip { display: none; }
+  .downloads, .back, .city, .tip, .donate { display: none; }
 }
+
+.donate { margin-top: 14px; padding: 12px; background: var(--a-soft); border: 2px solid var(--ink); border-radius: 16px; font-size: 13px; line-height: 1.5; }
+.donate b { font-size: 14px; }
+.donate .downloads { margin-top: 8px; }

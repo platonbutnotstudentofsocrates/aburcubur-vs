@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { Donate } from "@/components/Donate";
 import { PrintButton } from "@/components/PrintButton";
 import { Snack } from "@/components/Snack";
 import { TurkeyMap } from "@/components/TurkeyMap";
@@ -55,6 +56,7 @@ export default async function RoundPage({ params }: PageProps<"/raunt/[round]">)
 
       <section className="next">
         <h2>İl il sonuçlar</h2>
+        <Donate />
         <div className="downloads">
           <a href={`/veri/raunt-${matchup.round}.csv`}>İndir (Excel)</a>
           <PrintButton />

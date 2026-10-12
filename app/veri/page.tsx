@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Donate } from "@/components/Donate";
 import { productName } from "@/lib/catalog";
 import { getFinishedRounds } from "@/lib/store";
 
@@ -26,6 +27,8 @@ export default async function Veri() {
           Devam eden raundun verisi raunt bitince eklenir.
         </p>
       </div>
+
+      <Donate />
 
       {rounds.length > 0 ? (
         <section className="past">
