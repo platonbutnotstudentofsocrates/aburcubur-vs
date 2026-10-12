@@ -156,4 +156,5 @@ footer a { color: inherit; }
 
 .donate { margin-top: 14px; padding: 12px; background: var(--a-soft); border: 2px solid var(--ink); border-radius: 16px; font-size: 13px; line-height: 1.5; }
 .donate b { font-size: 14px; }
-.donate .downloads { margin-top: 8px; }
+.donate .downloads { margin-top: 8px; align-items: center; }
+.donate .downloads span { background: none; border: 0; padding: 0; min-width: 76px; }
